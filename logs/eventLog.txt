@@ -1,0 +1,6 @@
+20230804	19:41:26	a14a1a8a-00dd-4d1c-aa6a-438c4b7aed99	Log event emmitted!
+
+20230804	19:41:55	0994f736-fb83-41f6-bc65-e62b1bcea93a	Log event emmitted!
+
+20230804	19:43:48	7de607c0-04f6-4ab8-8d1f-d3f05b56d53f	Log event emmitted!
+
