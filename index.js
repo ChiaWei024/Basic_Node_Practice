@@ -1,6 +1,6 @@
 // import logEvents
 const { EventEmitter } = require("stream");
-const logEvents = require("./logEvents");
+const logEvents = require("./middleware/logEvents");
 
 // Event Emmiter
 const eventEmmiter = require("events");
