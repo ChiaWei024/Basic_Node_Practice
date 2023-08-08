@@ -23,3 +23,11 @@ Following the tutorial: https://www.youtube.com/watch?v=f2EqECiTBL8
       - errLogger: Logs error
     - Others: CORS
       - How to set corsOptions (white list)
+
+1.  Express Router
+
+    - Using router sub-directory to make code cleaner.
+    - When static files are reuqired in sub-directory, app.use("/sub-dir", static files path(public file))
+
+1.  Chain different http method
+    - Syntax: router.route("/your-route").method().method()...

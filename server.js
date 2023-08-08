@@ -20,8 +20,19 @@ app.use(logger);
 app.use(express.urlencoded({ extended: false }));
 // built-in middleware for json
 app.use(express.json());
+
 // serve static files - where to put css, img, ... etc
 app.use(express.static(path.join(__dirname, "/public")));
+// serve static files - let router:subDir know to use static files
+app.use("/subDir", express.static(path.join(__dirname, "/public")));
+
+// router - root
+app.use("/", require("./routes/root"));
+// router - subDir
+app.use("/subDir", require("./routes/subDir"));
+// router - employees
+app.use("/employees", require("./routes/api/employees"));
+
 // Cross Origin Resource Sharing
 const cors = require("cors");
 // white list for cors
@@ -46,54 +57,35 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// routing
-// adding some regex: ^/|/index(.html)? -> with / only or /index or /index.html
-app.get("^/$|/index(.html)?", (req, res) => {
-  // method 1: using option to specify root dir
-  //   res.sendFile("./views/index.html", { root: __dirname });
-  // method 2: using path.join to specify root
-  res.sendFile(path.join(__dirname, "views", "index.html"));
-});
+// // Routing
+// // chaining route handler
+// app.get(
+//   "/chainingExample(.html)?",
+//   (req, res, next) => {
+//     console.log("chain 1");
+//     console.log("call next()");
+//     next();
+//   },
+//   (req, res) => {
+//     console.log("chain 2");
+//     res.send("res of chain 2");
+//   }
+// );
 
-app.get("/new-page(.html)?", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "new-page.html"));
-});
-
-// re-direct
-app.get("/old-page3(.html)?", (req, res) => {
-  // Note: reditrect default status code is 302
-  // specify 301 in redirect to change that
-  res.redirect(301, "/new-page.html");
-});
-
-// chaining route handler
-app.get(
-  "/chainingExample(.html)?",
-  (req, res, next) => {
-    console.log("chain 1");
-    console.log("call next()");
-    next();
-  },
-  (req, res) => {
-    console.log("chain 2");
-    res.send("res of chain 2");
-  }
-);
-
-// define function first, then call chaining using array
-const chainOne = (req, res, next) => {
-  console.log("1");
-  next();
-};
-const chainTwo = (req, res, next) => {
-  console.log("2");
-  next();
-};
-const chainThree = (req, res) => {
-  console.log("3");
-  res.send("Chain end");
-};
-app.get("/chainByFcn(.html)?", [chainOne, chainTwo, chainThree]);
+// // define function first, then call chaining using array
+// const chainOne = (req, res, next) => {
+//   console.log("1");
+//   next();
+// };
+// const chainTwo = (req, res, next) => {
+//   console.log("2");
+//   next();
+// };
+// const chainThree = (req, res) => {
+//   console.log("3");
+//   res.send("Chain end");
+// };
+// app.get("/chainByFcn(.html)?", [chainOne, chainTwo, chainThree]);
 
 // catch all
 // app.get("/*", (req, res) => {
@@ -104,10 +96,10 @@ app.get("/chainByFcn(.html)?", [chainOne, chainTwo, chainThree]);
 app.all("*", (req, res) => {
   res.status(404);
   // someting more detailed
-  if (req.accepted("html")) {
+  if (req.accepts("html")) {
     // if request a html file
     res.sendFile(path.join(__dirname, "views", "404.html"));
-  } else if (req.accepted("json")) {
+  } else if (req.accepts("json")) {
     // if request a json
     res.json({ error: "404 Not Found" });
   } else {
